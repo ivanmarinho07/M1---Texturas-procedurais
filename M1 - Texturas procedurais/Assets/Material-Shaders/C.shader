@@ -1,9 +1,8 @@
-Shader "Custom/A"
+Shader "Custom/C"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Inverter ("Inverter", Range(0, 1)) = 0
     }
 
     SubShader
@@ -13,7 +12,6 @@ Shader "Custom/A"
         #pragma target 3.0
 
         sampler2D _MainTex;
-        float _Inverter;
 
         struct Input
         {
@@ -24,13 +22,12 @@ Shader "Custom/A"
         {
             float2 uv = IN.uv_MainTex;
 
-            // Usa a posição horizontal para fazer o degradê do branco para o preto.
-            float c = 1.0 - uv.x;
+            //X e Y são usados para misturar as cores
+            float r = saturate(uv.x + 1.0 - uv.y); //Soma x e y + 1 para chegar no magenta
+            float g = saturate(uv.x + uv.y); //Soma x + y até o verde chegar no branco
+            float b = 1.0; //Mantém azul para chegar no ciano
 
-            //Inverter
-            c = lerp(c, 1.0 - c, _Inverter);
-
-            o.Albedo = float3(c, c, c);
+            o.Albedo = float3(r, g, b);
         }
         ENDCG
     }

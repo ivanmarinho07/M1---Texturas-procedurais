@@ -1,9 +1,9 @@
-Shader "Custom/A"
+Shader "Custom/F"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Inverter ("Inverter", Range(0, 1)) = 0
+        _Intensidade ("Intensidade", Range(1, 20)) = 8
     }
 
     SubShader
@@ -13,7 +13,7 @@ Shader "Custom/A"
         #pragma target 3.0
 
         sampler2D _MainTex;
-        float _Inverter;
+        float _Intensidade;
 
         struct Input
         {
@@ -24,11 +24,12 @@ Shader "Custom/A"
         {
             float2 uv = IN.uv_MainTex;
 
-            // Usa a posição horizontal para fazer o degradê do branco para o preto.
-            float c = 1.0 - uv.x;
+            // Calcula a distância do ponto até o centro
+            float2 centro = uv - 0.5;
+            float distancia = dot(centro, centro);
 
-            //Inverter
-            c = lerp(c, 1.0 - c, _Inverter);
+            // A exponencial cria uma transição suave do branco no centro para o preto.
+            float c = exp(-distancia * _Intensidade);
 
             o.Albedo = float3(c, c, c);
         }

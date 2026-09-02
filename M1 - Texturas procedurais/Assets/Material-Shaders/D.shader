@@ -1,9 +1,9 @@
-Shader "Custom/A"
+Shader "Custom/D"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Inverter ("Inverter", Range(0, 1)) = 0
+        _Listras ("Quantidade de Listras", Range(5, 50)) = 35
     }
 
     SubShader
@@ -13,7 +13,7 @@ Shader "Custom/A"
         #pragma target 3.0
 
         sampler2D _MainTex;
-        float _Inverter;
+        float _Listras;
 
         struct Input
         {
@@ -24,11 +24,11 @@ Shader "Custom/A"
         {
             float2 uv = IN.uv_MainTex;
 
-            // Usa a posição horizontal para fazer o degradê do branco para o preto.
-            float c = 1.0 - uv.x;
+            // Subtração de X e Y para criar a diagonal das listras e multiplicação aumenta ou diminui a quantidade de listras.
+            float c = sin((uv.x - uv.y) * _Listras);
 
-            //Inverter
-            c = lerp(c, 1.0 - c, _Inverter);
+            // Transformação dos valores pra criar a repetição das listras
+            c = abs(c);
 
             o.Albedo = float3(c, c, c);
         }
