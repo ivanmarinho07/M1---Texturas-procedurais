@@ -24,11 +24,11 @@ Shader "Custom/F"
         {
             float2 uv = IN.uv_MainTex;
 
-            // Calcula a distância do ponto até o centro
+            //calcula a distância do ponto até o centro
             float2 centro = uv - 0.5;
             float distancia = dot(centro, centro);
 
-            // A exponencial cria uma transição suave do branco no centro para o preto.
+            //a exponencial troca o branco do centro para o preto
             float c = exp(-distancia * _Intensidade);
 
             o.Albedo = float3(c, c, c);

@@ -24,7 +24,10 @@ Shader "Custom/A"
      {
          float2 uv = IN.uv_MainTex;
 
+         //cria o degradê horizontal do branco para o preto
          float c = 1.0 - uv.x;
+
+         //inverte o degradê
          c = lerp(c, 1.0 - c, _Inverter);
 
          o.Albedo = float3(c, c, c);

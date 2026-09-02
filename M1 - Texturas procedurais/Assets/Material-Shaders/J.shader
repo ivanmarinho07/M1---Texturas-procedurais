@@ -1,8 +1,9 @@
-Shader "Custom/C"
+Shader "Custom/J"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _Blue ("Blue", Color) = (0,0,1,1)
     }
 
     SubShader
@@ -12,6 +13,7 @@ Shader "Custom/C"
         #pragma target 3.0
 
         sampler2D _MainTex;
+        float4 _Blue;
 
         struct Input
         {
@@ -22,12 +24,14 @@ Shader "Custom/C"
         {
             float2 uv = IN.uv_MainTex;
 
-            //X e Y são usados para misturar as cores
-            float r = saturate(uv.x + 1.0 - uv.y); //soma x e y + 1 para chegar no magenta
-            float g = saturate(uv.x + uv.y); //soma x + y até o verde chegar no branco
-            float b = 1.0; //mantém azul para chegar no ciano
+            //calcula a distância de cada ponto até o centro.
+            float2 centro = uv - 0.5;
+            float distancia = length(centro);
 
-            o.Albedo = float3(r, g, b);
+            //deixa azul os pontos que estão dentro do raio do círculo.
+            float c = 1.0 - step(0.25, distancia);
+
+            o.Albedo = lerp(float3(1,1,1), _Blue.rgb, c);
         }
         ENDCG
     }

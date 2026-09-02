@@ -26,13 +26,13 @@ Shader "Custom/B"
         {
             float2 uv = IN.uv_MainTex;
 
-            // A soma das coordenadas cria a direção diagonal.
+            //soma das coordenadas cria a direção diagonal
             float diagonal = uv.x - uv.y;
 
-            // abs() deixa o centro da diagonal mais próximo de 1.
+            //deixa o centro da diagonal mais próximo de 1
             float c = 1.0 - abs(diagonal);
 
-            // Mistura o azul e o vermelho de acordo com a distância da diagonal.
+            //mistura o azul e o vermelho de acordo com a distância da diagonal
             o.Albedo = lerp(float3(0, 0, 1), float3(1, 0, 0), c);
         }
         ENDCG

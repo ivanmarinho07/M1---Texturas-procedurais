@@ -26,14 +26,14 @@ Shader "Custom/E"
         {
             float2 uv = IN.uv_MainTex;
 
-            // Cria as repetições da bolinha 
+            //cria as repetições da bolinha 
             uv = frac(uv * _Repeticoes);
 
-            // Calcula a distância do ponto até o centro de cada repetição.
+            //calcula a distância do ponto até o centro de cada repetição
             float2 centro = uv - 0.5;
             float distancia = dot(centro, centro);
 
-            // A exponencial cria a mesma mancha suave do Shader F.
+            //a exponencial cria a mesma mancha suave do Shader F
             float c = exp(-distancia * _Intensidade);
 
             o.Albedo = float3(c, c, c);

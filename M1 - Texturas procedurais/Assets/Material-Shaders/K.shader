@@ -1,8 +1,10 @@
-Shader "Custom/C"
+Shader "Custom/K"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _Blue ("Blue", Color) = (0,0,1,1)
+        _Listras ("Quantidade de Listras", Range(1, 20)) = 4
     }
 
     SubShader
@@ -12,6 +14,8 @@ Shader "Custom/C"
         #pragma target 3.0
 
         sampler2D _MainTex;
+        float4 _Blue;
+        float _Listras;
 
         struct Input
         {
@@ -22,12 +26,13 @@ Shader "Custom/C"
         {
             float2 uv = IN.uv_MainTex;
 
-            //X e Y são usados para misturar as cores
-            float r = saturate(uv.x + 1.0 - uv.y); //soma x e y + 1 para chegar no magenta
-            float g = saturate(uv.x + uv.y); //soma x + y até o verde chegar no branco
-            float b = 1.0; //mantém azul para chegar no ciano
+            //multiplica X para repetir o padrão e cria as listras verticais.
+            float c = frac(uv.x * _Listras);
 
-            o.Albedo = float3(r, g, b);
+            //alterna entre azul e branco.
+            c = step(0.5, c);
+
+            o.Albedo = lerp(float3(1,1,1), _Blue.rgb, c);
         }
         ENDCG
     }

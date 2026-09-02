@@ -1,9 +1,9 @@
-Shader "Custom/D"
+Shader "Custom/L"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Listras ("Quantidade de Listras", Range(5, 50)) = 35
+        _Linhas ("Quantidade de Linhas", Range(1, 20)) = 8
     }
 
     SubShader
@@ -13,7 +13,7 @@ Shader "Custom/D"
         #pragma target 3.0
 
         sampler2D _MainTex;
-        float _Listras;
+        float _Linhas;
 
         struct Input
         {
@@ -24,11 +24,15 @@ Shader "Custom/D"
         {
             float2 uv = IN.uv_MainTex;
 
-            //subtração de X e Y para criar a diagonal das listras e multiplicação aumenta ou diminui a quantidade de listras
-            float c = sin((uv.x - uv.y) * _Listras);
+            //calcula a distância de cada ponto até o centro
+            float2 centro = uv - 0.5;
+            float distancia = length(centro);
 
-            //transformação dos valores pra criar a repetição das listras
-            c = abs(c);
+            //repete a distância e cria círculos
+            float c = frac(distancia * _Linhas);
+
+            //transforma a repetição em linhas claras e escuras
+            c = step(0.5, c);
 
             o.Albedo = float3(c, c, c);
         }
